@@ -1,4 +1,6 @@
 const Discord = require("discord.js");
+let got = import("got");
+
 
 let getClient = function(Discord){
     let flags = Discord.Intents.FLAGS;
@@ -59,12 +61,13 @@ let main = async function(){
             });
         });
     });
+    got = (await got).got;
     
-    bot.sub("run").addFunc((msg,substr)=>{
+    bot.sub("run").addFunc(async (msg,substr)=>{
         let code = substr.trim();
         let lang = "js"
         if(code.slice(0,3) === "```" && code.slice(-3) === "```"){
-            code = code.slize(3,-3);
+            code = code.slice(3,-3);
             let lines = code.split("\n");
             if(lines.length > 1){
                 if(lines[0].length !== 0)lang = lines[0].trim();
@@ -72,9 +75,32 @@ let main = async function(){
             }
             code = lines.join("\n");
         }else if(code.slice(0,1) === "`" && code.slice(-1) === "`"){
-            code = code.slize(3,-3);
+            code = code.slice(1,-1);
         }
-        msg.reply("running the code\n"+`\`\`\`${lang}\n${code}\`\`\``);
+        //msg.reply("running the code\n"+`\`\`\`${lang}\n${code}\`\`\``);
+        console.log("got the code");
+        console.log(code);
+        let result;
+        try{
+            result = await got.post("https://emkc.org/api/v1/piston/execute",{
+                json: {
+                    language:lang,
+                    source:code
+                }
+            }).json();
+        }catch(err){
+            msg.reply("Error connecting to the server");
+            console.log(err);
+            return;
+        }
+        msg.reply("```\n"+result.output+"\n```");
+        /*if(result.ran){
+            msg.reply("Execution Success\n```\n"+result.output+"\n```");
+        }else{
+            //msg.reply("Your code did not run\n"+JSON.stringify(result,null,4));
+            msg.reply("Your code did not run\n```\n"+result.output+"\n```");
+        }*/
+        console.log(result);
     });
 };
 
