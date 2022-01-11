@@ -45,7 +45,7 @@ let main = async function(){
     let initmsgs = [];
     bot.onReady(()=>{
         console.log(`Logged in as ${client.user.tag}!`);
-        const guilds = bot.client.guilds.cache;
+        /*const guilds = bot.client.guilds.cache;
         initmsgs.push("guilds: "+JSON.stringify(guilds.map(g=>g.name)));
         //sending it to every channels
         guilds.map(guild=>{
@@ -59,7 +59,7 @@ let main = async function(){
                 console.log(channel.type);
                 channel.send(initmsgs.join("\n"));
             });
-        });
+        });*/
     });
     got = (await got).got;
     
