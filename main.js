@@ -93,7 +93,7 @@ let main = async function(){
             console.log(err);
             return;
         }
-        msg.reply("```\n"+result.output+"\n```");
+        msg.reply(("```\n"+result.output.slice(0,1992)+"\n```"));
         /*if(result.ran){
             msg.reply("Execution Success\n```\n"+result.output+"\n```");
         }else{
